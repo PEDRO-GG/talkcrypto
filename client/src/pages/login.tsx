@@ -1,53 +1,77 @@
+import axios from "axios";
+import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import ErrorMessage from "../components/ErrorMessage";
+import InputGroup from "../components/InputGroup";
 
 export default function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState<string[]>([]);
+  const router = useRouter();
+
+  const submitForm = async (event: FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const res = await axios.post("/auth/signIn", {
+        username: username,
+        password: password,
+      });
+      localStorage.setItem("accessToken", res.data.accessToken);
+      router.push("/");
+    } catch (error) {
+      let errors = error.response.data.message;
+      if (typeof errors === "string") {
+        setMessage([errors]);
+      } else {
+        setMessage(errors);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col items-center h-screen ">
       <Head>
         <title>Login</title>
       </Head>
       <h1 className="mt-10 mb-12 text-6xl">Sign In</h1>
-      <form className="sm:w-96 w-72">
-        <div className="mb-4">
-          <label className="block mb-2 font-light text-md" htmlFor="username">
-            Username
-          </label>
-          <input
-            className="w-full p-4 font-light leading-tight border border-gray-500 appearance-none bg-drabya-gray focus:outline-none focus:shadow-outline"
-            type="text"
-            name="username"
-            id=""
-            placeholder="Username"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2 font-light text-md" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="w-full p-4 font-light leading-tight border border-gray-500 appearance-none bg-drabya-gray focus:outline-none focus:shadow-outline"
-            type="password"
-            name="password"
-            id=""
-            placeholder="Password"
-          />
-        </div>
+      <form className="sm:w-96 w-72" onSubmit={submitForm}>
+        <InputGroup
+          type="text"
+          label="Username"
+          error={message.length > 0}
+          value={username}
+          setValue={setUsername}
+        />
+        <InputGroup
+          type="password"
+          label="Password"
+          error={message.length > 0}
+          value={password}
+          setValue={setPassword}
+        />
 
         <div className="flex justify-center mb-5">
           <button
             className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase bg-black rounded hover:shadow-lg focus:outline-none hover:bg-white hover:text-black"
-            type="button"
+            type="submit"
           >
             LOGIN
           </button>
         </div>
         <p className="font-light text-center text-md">
           Don't have an account?{" "}
-          <a className="font-bold text-black underline cursor-pointer text-md">
-            Create
-          </a>
+          <Link href="/register">
+            <a className="font-bold text-black underline cursor-pointer text-md">
+              Create
+            </a>
+          </Link>
         </p>
       </form>
+      <ErrorMessage show={message.length > 0} errors={message} />
     </div>
   );
 }

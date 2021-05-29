@@ -1,11 +1,75 @@
+import axios from "axios";
 import Head from "next/head";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/dist/client/router";
+import InputGroup from "../components/InputGroup";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function Register() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState<string[]>([]);
+  const router = useRouter();
+
+  const submitForm = async (event: FormEvent) => {
+    event.preventDefault();
+
+    try {
+      await axios.post("/auth/signUp", {
+        username: username,
+        password: password,
+      });
+      router.push("/");
+    } catch (error) {
+      let errors = error.response.data.message;
+      if (typeof errors === "string") {
+        setMessage([errors]);
+      } else {
+        setMessage(errors);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col items-center h-screen ">
       <Head>
         <title>Register</title>
       </Head>
+      <h1 className="mt-10 mb-12 text-6xl">Sign Up</h1>
+      <form className="sm:w-96 w-72" onSubmit={submitForm}>
+        <InputGroup
+          type="text"
+          label="Username"
+          error={message.length > 0}
+          value={username}
+          setValue={setUsername}
+        />
+        <InputGroup
+          type="password"
+          label="Password"
+          error={message.length > 0}
+          value={password}
+          setValue={setPassword}
+        />
+
+        <button
+          className="block px-6 py-2 mx-auto text-xs font-medium leading-6 text-center text-white uppercase bg-black rounded hover:shadow-lg focus:outline-none hover:bg-white hover:text-black"
+          type="submit"
+        >
+          REGISTER
+        </button>
+
+        <p className="font-light text-center text-md">
+          Already have an account?{" "}
+          <Link href="/login">
+            <a className="font-bold text-black underline cursor-pointer text-md">
+              Login
+            </a>
+          </Link>
+        </p>
+      </form>
+      <ErrorMessage show={message.length > 0} errors={message} />
     </div>
   );
 }
