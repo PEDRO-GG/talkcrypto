@@ -3,6 +3,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { useAuthDispatch } from "../context/auth";
 import ErrorMessage from "../components/ErrorMessage";
 import InputGroup from "../components/InputGroup";
 
@@ -11,6 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string[]>([]);
   const router = useRouter();
+  const dispatch = useAuthDispatch();
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -20,6 +22,7 @@ export default function Login() {
         username: username,
         password: password,
       });
+      dispatch({ type: "LOGIN", payload: res.data.username });
       localStorage.setItem("accessToken", res.data.accessToken);
       router.push("/");
     } catch (error) {

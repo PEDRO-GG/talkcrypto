@@ -39,7 +39,7 @@ export class ArticleRepository extends Repository<Article> {
     const article = new Article();
     article.title = title;
     article.content = content;
-    article.createdOn = new Date();
+    article.createdOn = new Date().toDateString();
     article.author = user;
     await article.save();
     return article;

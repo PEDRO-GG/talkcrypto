@@ -20,7 +20,7 @@ export class Article extends BaseEntity {
   content: string;
 
   @Column()
-  createdOn: Date;
+  createdOn: string;
 
   @Column()
   authorId: number;
