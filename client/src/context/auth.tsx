@@ -1,4 +1,5 @@
-import { createContext, useContext, useReducer } from "react";
+import axios from "axios";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { User } from "../types";
 
 interface State {
@@ -11,14 +12,16 @@ interface Action {
   payload: any;
 }
 
-//used to give children access to the current state
+// Context object for retrieving the state
 const StateContext = createContext<State>({
   authenticated: false,
   user: null,
 });
 
-const DispatchContext = createContext(null); //used to give children access to the dispatch so they can update the state
+// Context object for updating the state
+const DispatchContext = createContext(null);
 
+// Reducer function for useReducer hook
 const reducer = (state: State, { type, payload }: Action) => {
   switch (type) {
     case "LOGIN":
@@ -37,19 +40,28 @@ const reducer = (state: State, { type, payload }: Action) => {
       throw new Error(`Unknown action type: ${type}`);
   }
 };
+
+// Used in _app.tsx to pass authentication state down to all children in this web app
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, {
-    //dispatch is used by the components that will change the state
     user: null,
     authenticated: false,
   });
-  //every context object created with createContext, has .Provider component
-  //value is whatever gets passed down to the childen, intresting that we have
-  // two contexts and one takes the dispatch and the other takes the state; seperates concerns and saves us from nested deconstructuring: const {state:{authenticated}} = useContext(dd)
-  //good practice to split this up intead of value={dispatch, state}
-  //in children that want to change state:
-  //1. const context = useContext(whatever was returned from createContext)
-  //2. context.dispatch("LOGIN")
+
+  // If the user is already login in, load the user in
+  useEffect(() => {
+    const loadUser = async () => {
+      const token: string | undefined = localStorage.getItem("accessToken");
+      try {
+        const res = await axios.post("/auth/me", { accessToken: token });
+        dispatch({ type: "LOGIN", payload: res.data.username });
+      } catch (error) {
+        console.log("Sign in to create a article");
+      }
+    };
+    loadUser();
+  }, []);
+
   return (
     <DispatchContext.Provider value={dispatch}>
       <StateContext.Provider value={state}>{children}</StateContext.Provider>
@@ -57,7 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// use useContext in the children that want access to the value= part
-// two function that return what is returned from useContext
-export const useAuthState = () => useContext(StateContext); //gives access just to the current state
-export const useAuthDispatch = () => useContext(DispatchContext); // gives access just to the dispatch
+// Custom hook for retrieving the state
+export const useAuthState = () => useContext(StateContext);
+//Custom hook for updating the state
+export const useAuthDispatch = () => useContext(DispatchContext);

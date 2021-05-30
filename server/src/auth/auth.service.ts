@@ -30,4 +30,9 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
     return { username, accessToken };
   }
+
+  me(accessToken: string): string {
+    const username = this.jwtService.verify(accessToken);
+    return username;
+  }
 }

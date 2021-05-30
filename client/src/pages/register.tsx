@@ -5,12 +5,15 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import InputGroup from "../components/InputGroup";
 import ErrorMessage from "../components/ErrorMessage";
+import { useAuthState } from "../context/auth";
 
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string[]>([]);
   const router = useRouter();
+  const { authenticated } = useAuthState();
+  if (authenticated) router.push("/");
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -54,7 +57,7 @@ export default function Register() {
         />
 
         <button
-          className="block px-6 py-2 mx-auto text-xs font-medium leading-6 text-center text-white uppercase bg-black rounded hover:shadow-lg focus:outline-none hover:bg-white hover:text-black"
+          className="block px-6 py-2 mx-auto text-xs font-medium text-center text-white uppercase bg-black rounded hover:shadow-lg hover:bg-white hover:text-black"
           type="submit"
         >
           REGISTER

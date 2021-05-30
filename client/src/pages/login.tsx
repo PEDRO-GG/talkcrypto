@@ -3,7 +3,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { useAuthDispatch } from "../context/auth";
+import { useAuthDispatch, useAuthState } from "../context/auth";
 import ErrorMessage from "../components/ErrorMessage";
 import InputGroup from "../components/InputGroup";
 
@@ -13,6 +13,9 @@ export default function Login() {
   const [message, setMessage] = useState<string[]>([]);
   const router = useRouter();
   const dispatch = useAuthDispatch();
+  const { authenticated } = useAuthState();
+
+  if (authenticated) router.push("/");
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -59,7 +62,7 @@ export default function Login() {
 
         <div className="flex justify-center mb-5">
           <button
-            className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase bg-black rounded hover:shadow-lg focus:outline-none hover:bg-white hover:text-black"
+            className="inline-block px-6 py-2 text-xs font-medium text-center text-white uppercase bg-black rounded hover:shadow-lg hover:bg-white hover:text-black"
             type="submit"
           >
             LOGIN
