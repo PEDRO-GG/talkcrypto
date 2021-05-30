@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const res = await axios.post("/auth/me", { accessToken: token });
         dispatch({ type: "LOGIN", payload: res.data.username });
       } catch (error) {
-        console.log("Sign in to create a article");
+        console.log(error);
       }
     };
     loadUser();

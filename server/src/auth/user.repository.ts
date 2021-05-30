@@ -9,7 +9,7 @@ import {
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
     const { username, password } = authCredentialsDto;
 
     const user = new User();
@@ -19,6 +19,7 @@ export class UserRepository extends Repository<User> {
 
     try {
       await user.save();
+      return user.username;
     } catch (error) {
       if (error.code === '23505') {
         //our enitity model has Unique decorator and will throw error is username is not unique

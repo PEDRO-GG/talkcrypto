@@ -1,14 +1,21 @@
+import { useRouter } from "next/router";
 import { useAuthState, useAuthDispatch } from "../context/auth";
 import NavButton from "./NavButton";
 import NavLink from "./NavLink";
 const Navbar: React.FC = () => {
   const { authenticated } = useAuthState();
   const dispatch = useAuthDispatch();
+  const router = useRouter();
 
   const logout = () => {
     localStorage.removeItem("accessToken");
     dispatch({ type: "LOGOUT" });
+    router.push("/");
     // window.location.reload(); might not be needed
+  };
+
+  const goToCreatePage = () => {
+    router.push("/create");
   };
   return (
     <div className="flex justify-between h-16 bg-black">
@@ -29,12 +36,12 @@ const Navbar: React.FC = () => {
         {!authenticated ? (
           <>
             <NavLink href="/login" label="Login" />
-            <NavLink href="/login" label="Register" />
+            <NavLink href="/register" label="Register" />
           </>
         ) : (
           <>
             <NavButton label="Logout" doAction={logout} />
-            <NavButton label="Create" doAction={() => console.log("clicked")} />
+            <NavButton label="Create" doAction={goToCreatePage} />
           </>
         )}
       </nav>

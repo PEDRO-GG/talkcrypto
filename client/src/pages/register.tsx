@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import InputGroup from "../components/InputGroup";
 import ErrorMessage from "../components/ErrorMessage";
-import { useAuthState } from "../context/auth";
+import { useAuthDispatch, useAuthState } from "../context/auth";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -14,15 +14,29 @@ export default function Register() {
   const router = useRouter();
   const { authenticated } = useAuthState();
   if (authenticated) router.push("/");
+  const dispatch = useAuthDispatch();
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
+      // 1. Register the user
       await axios.post("/auth/signUp", {
         username: username,
         password: password,
       });
+
+      // 2. Log the user in
+      const res = await axios.post("/auth/signIn", {
+        username: username,
+        password: password,
+      });
+
+      // 3. Change the global authorization state
+      dispatch({ type: "LOGIN", payload: res.data.username });
+
+      // 4. Set the token and redirect
+      localStorage.setItem("accessToken", res.data.accessToken);
       router.push("/");
     } catch (error) {
       let errors = error.response.data.message;
@@ -56,12 +70,14 @@ export default function Register() {
           setValue={setPassword}
         />
 
-        <button
-          className="block px-6 py-2 mx-auto text-xs font-medium text-center text-white uppercase bg-black rounded hover:shadow-lg hover:bg-white hover:text-black"
-          type="submit"
-        >
-          REGISTER
-        </button>
+        <div className="flex justify-center mb-5">
+          <button
+            className="inline-block px-6 py-2 text-xs font-medium text-center text-white uppercase bg-black rounded hover:shadow-lg hover:bg-white hover:text-black"
+            type="submit"
+          >
+            Register
+          </button>
+        </div>
 
         <p className="font-light text-center text-md">
           Already have an account?{" "}
