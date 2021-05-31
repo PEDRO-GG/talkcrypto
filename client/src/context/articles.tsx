@@ -4,13 +4,11 @@ import { Article } from "../types";
 
 interface ArticlesState {
   articles: Article[];
-  setArticles: (newValue: Article[]) => void | null;
   fetchAllArticles: () => void | null;
   searchArticles: (searchTerm: string) => void | null;
 }
-const ArticlesContext = createContext<ArticlesState>({
+export const ArticlesContext = createContext<ArticlesState>({
   articles: [],
-  setArticles: null,
   fetchAllArticles: null,
   searchArticles: null,
 });
@@ -36,14 +34,13 @@ export const ArticlesContextProvider = ({
       });
       setArticles(res.data);
     } catch (error) {
-      console.log(error);
+      console.log("here");
     }
   };
   return (
     <ArticlesContext.Provider
       value={{
         articles,
-        setArticles,
         fetchAllArticles,
         searchArticles,
       }}

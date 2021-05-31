@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
+import { ArticlesContext } from "../context/articles";
 
 const create = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const { fetchAllArticles } = useContext(ArticlesContext);
   const router = useRouter();
 
   const submitArticle = async (e: FormEvent) => {
@@ -23,6 +25,7 @@ const create = () => {
           },
         }
       );
+      fetchAllArticles();
       router.push("/");
     } catch (error) {
       console.log(error);

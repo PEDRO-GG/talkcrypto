@@ -1,23 +1,12 @@
 import axios from "axios";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ArticleContainer from "../components/ArticleContainer";
+import { ArticlesContext } from "../context/articles";
 import { Article } from "../types";
 
 export default function Home() {
-  const [articles, setArticles] = useState<Article[]>([]);
-
-  useEffect(() => {
-    const getArticles = async () => {
-      try {
-        const res = await axios.get("/articles");
-        setArticles(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getArticles();
-  }, []);
+  const { articles } = useContext(ArticlesContext);
 
   return (
     <>

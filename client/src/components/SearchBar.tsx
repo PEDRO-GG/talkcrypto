@@ -1,8 +1,17 @@
-import { useEffect, useState } from "react";
-
+import { useContext, useEffect, useState } from "react";
+import { ArticlesContext } from "../context/articles";
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  useEffect(() => {}, []);
+  const { searchArticles, fetchAllArticles } = useContext(ArticlesContext);
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      fetchAllArticles();
+    } else {
+      searchArticles(searchTerm);
+    }
+  }, [searchTerm]);
+
   return (
     <input
       type="text"
