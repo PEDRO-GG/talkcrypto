@@ -4,6 +4,7 @@ import axios from "axios";
 import "../../styles/globals.css";
 import Navbar from "../components/Navbar";
 import { AuthProvider } from "../context/auth";
+import { ArticlesContextProvider } from "../context/articles";
 
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -14,8 +15,10 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
-      {!isAuthRoute && <Navbar />}
-      <Component {...pageProps} />
+      <ArticlesContextProvider>
+        {!isAuthRoute && <Navbar />}
+        <Component {...pageProps} />
+      </ArticlesContextProvider>
     </AuthProvider>
   );
 }
