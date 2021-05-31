@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useAuthState, useAuthDispatch } from "../context/auth";
 import NavButton from "./NavButton";
 import NavLink from "./NavLink";
+import SearchBar from "./SearchBar";
 const Navbar: React.FC = () => {
   const { authenticated } = useAuthState();
   const dispatch = useAuthDispatch();
@@ -25,11 +26,7 @@ const Navbar: React.FC = () => {
           TC
         </div>
         {/* SearchBar */}
-        <input
-          type="text"
-          placeholder="search"
-          className="p-4 font-light leading-tight border border-gray-500 appearance-none md:w-80 focus:outline-none"
-        />
+        <SearchBar />
       </div>
       {/* Login & Sign Up on unathenticated. Logout & Create on authenticated */}
       <nav className="flex ">

@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     authenticated: false,
   });
 
-  // If the user is already login in, load the user in
+  // If the user's token is in localStorage, load the user in
   useEffect(() => {
     const loadUser = async () => {
       const token: string | undefined = localStorage.getItem("accessToken");
