@@ -57,7 +57,7 @@ const create = () => {
           className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-gray-600"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="Text (optional)"
+          placeholder="Text"
           rows={4}
         ></textarea>
         <div className="flex justify-end">

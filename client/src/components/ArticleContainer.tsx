@@ -1,4 +1,5 @@
 import { Article } from "../types";
+import styles from "../../styles/article.module.css";
 
 interface ArticleContainerProps {
   article: Article;
@@ -10,7 +11,9 @@ const ArticleContainer: React.FC<ArticleContainerProps> = ({ article }) => {
       <p className="text-lg ">
         By <span className="text-blue-400">{article.author.username}</span>
       </p>
-      <p className="font-normal leading-7">{article.content}</p>
+      <p className="font-normal leading-7 truncate max-h-32 ">
+        {article.content}
+      </p>
       <small>{article.createdOn}</small>
     </div>
   );
