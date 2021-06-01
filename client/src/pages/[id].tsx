@@ -25,7 +25,9 @@ const Article = () => {
         </span>
       </p>
       <small>{selectedArticle.createdOn}</small>
-      <p className="mt-5 font-normal leading-7">{selectedArticle.content}</p>
+      <p className="mt-5 font-normal leading-7 break-words">
+        {selectedArticle.content}
+      </p>
     </article>
   );
 };
