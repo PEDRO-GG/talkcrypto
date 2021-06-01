@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { Article } from './article.entity';
@@ -17,8 +17,15 @@ export class ArticlesService {
     return this.articleRepository.getAllArticles(searchDto);
   }
 
-  async getArticlesByUsername(username: string): Promise<any> {
-    return this.articleRepository.getArticlesByUsername(username);
+  async getArticleById(id: number): Promise<Article> {
+    const found = await this.articleRepository.findOne({
+      where: { id: id },
+      relations: ['author'],
+    });
+    if (!found) {
+      throw new NotFoundException(`Task with ID "${id}" not found`);
+    }
+    return found;
   }
 
   async createArticle(

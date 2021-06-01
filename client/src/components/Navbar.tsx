@@ -37,9 +37,12 @@ const Navbar: React.FC = () => {
       <div className="flex justify-between h-16 bg-black">
         {/* Logo and Searchbar*/}
         <div className="flex">
-          <div className="flex items-center justify-center p-3 text-2xl text-white bg-black ">
+          <p
+            onClick={() => router.push("/")}
+            className="flex items-center justify-center p-3 text-2xl text-white bg-black "
+          >
             TC
-          </div>
+          </p>
           {/* SearchBar */}
           <SearchBar />
         </div>

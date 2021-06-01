@@ -23,14 +23,6 @@ export class ArticleRepository extends Repository<Article> {
     return articles;
   }
 
-  async getArticlesByUsername(username: string): Promise<Article[]> {
-    const allArticles = await this.find({ relations: ['author'] }); // joins article and user tables
-    const articles = allArticles.filter(
-      (article) => article.author.username === username,
-    );
-    return articles;
-  }
-
   async createArticle(
     createArticleDto: CreateArticleDto,
     user: User,

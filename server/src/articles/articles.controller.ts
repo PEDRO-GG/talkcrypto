@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   UseGuards,
@@ -29,16 +30,13 @@ export class ArticlesController {
     return this.articleServices.getAllArticles(searchDto);
   }
 
-  // Get all articles pertaining to the current user
-  @Get('/:username')
-  getArticlesByUsername(
-    @Param('username') username: string,
-  ): Promise<Article[]> {
-    return this.articleServices.getArticlesByUsername(username);
+  // Get an articles by id
+  @Get('/:id')
+  getArticleById(@Param('id', ParseIntPipe) id: number): Promise<Article> {
+    return this.articleServices.getArticleById(id);
   }
-  // getArticleById
 
-  // createArticle, only users can
+  // Create an article, provided a token is given
   @Post()
   @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)

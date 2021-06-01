@@ -4,12 +4,16 @@ import { Article } from "../types";
 
 interface ArticlesState {
   articles: Article[];
-  fetchAllArticles: () => void | null;
-  searchArticles: (searchTerm: string) => void | null;
+  selectedArticle: Article;
+  fetchAllArticles: () => void;
+  fetchArticleById: (id: number) => void;
+  searchArticles: (searchTerm: string) => void;
 }
 export const ArticlesContext = createContext<ArticlesState>({
-  articles: [],
+  articles: null,
+  selectedArticle: null,
   fetchAllArticles: null,
+  fetchArticleById: null,
   searchArticles: null,
 });
 
@@ -18,7 +22,9 @@ export const ArticlesContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<Article[]>();
+  const [selectedArticle, setSelectedArticle] = useState<Article>();
+
   const fetchAllArticles = async () => {
     try {
       const res = await axios.get("/articles");
@@ -27,6 +33,7 @@ export const ArticlesContextProvider = ({
       console.log(error);
     }
   };
+
   const searchArticles = async (searchTerm: string) => {
     try {
       const res = await axios.get("/articles", {
@@ -34,14 +41,25 @@ export const ArticlesContextProvider = ({
       });
       setArticles(res.data);
     } catch (error) {
-      console.log("here");
+      console.log(error);
+    }
+  };
+
+  const fetchArticleById = async (id: number) => {
+    try {
+      const res = await axios.get(`/articles/${id}`);
+      setSelectedArticle(res.data);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
     <ArticlesContext.Provider
       value={{
         articles,
+        selectedArticle,
         fetchAllArticles,
+        fetchArticleById,
         searchArticles,
       }}
     >

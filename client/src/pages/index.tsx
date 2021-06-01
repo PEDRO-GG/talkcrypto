@@ -1,12 +1,11 @@
-import axios from "axios";
 import Head from "next/head";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import ArticleContainer from "../components/ArticleContainer";
 import { ArticlesContext } from "../context/articles";
-import { Article } from "../types";
 
 export default function Home() {
   const { articles } = useContext(ArticlesContext);
+  if (!articles) return <p>Loading...</p>;
 
   return (
     <>
