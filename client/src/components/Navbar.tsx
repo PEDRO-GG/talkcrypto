@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
         <div className="flex">
           <p
             onClick={() => router.push("/")}
-            className="flex items-center justify-center p-3 text-2xl text-white bg-black "
+            className="flex items-center justify-center p-3 text-2xl text-white bg-black cursor-pointer "
           >
             TC
           </p>

@@ -6,7 +6,6 @@ import { ArticlesContext } from "../context/articles";
 export default function Home() {
   const { articles } = useContext(ArticlesContext);
   if (!articles) return <p>Loading...</p>;
-
   return (
     <>
       <Head>
