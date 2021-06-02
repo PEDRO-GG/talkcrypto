@@ -6,8 +6,7 @@ import Navbar from "../components/Navbar";
 import { AuthProvider } from "../context/auth";
 import { ArticlesContextProvider } from "../context/articles";
 
-axios.defaults.baseURL =
-  process.env.REACT_APP_BASE_URL || "http://localhost:3001";
+axios.defaults.baseURL = process.env.API_URL || "http://localhost:3001";
 
 function App({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
