@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -48,6 +49,9 @@ export class ArticlesController {
   }
 
   // deleteArticle
-
+  @Delete('/:id')
+  deleteArticleById(@Param('id', ParseIntPipe) id: number) {
+    return this.articleServices.deleteArticleById(id);
+  }
   //updateArticle
 }

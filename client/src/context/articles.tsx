@@ -5,6 +5,8 @@ import { Article } from "../types";
 interface ArticlesState {
   articles: Article[];
   selectedArticle: Article;
+  selectedUser: any;
+  fetchAllArticlesOfUser: (username: string) => void;
   fetchAllArticles: () => void;
   fetchArticleById: (id: number) => void;
   searchArticles: (searchTerm: string) => void;
@@ -12,6 +14,8 @@ interface ArticlesState {
 export const ArticlesContext = createContext<ArticlesState>({
   articles: null,
   selectedArticle: null,
+  selectedUser: null,
+  fetchAllArticlesOfUser: null,
   fetchAllArticles: null,
   fetchArticleById: null,
   searchArticles: null,
@@ -24,6 +28,7 @@ export const ArticlesContextProvider = ({
 }) => {
   const [articles, setArticles] = useState<Article[]>();
   const [selectedArticle, setSelectedArticle] = useState<Article>();
+  const [selectedUser, setSelectedUser] = useState<any>();
 
   const fetchAllArticles = async () => {
     try {
@@ -45,6 +50,15 @@ export const ArticlesContextProvider = ({
     }
   };
 
+  const fetchAllArticlesOfUser = async (username: string) => {
+    try {
+      const res = await axios.get(`/auth/${username}`);
+      setSelectedUser(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const fetchArticleById = async (id: number) => {
     try {
       const res = await axios.get(`/articles/${id}`);
@@ -58,6 +72,8 @@ export const ArticlesContextProvider = ({
       value={{
         articles,
         selectedArticle,
+        selectedUser,
+        fetchAllArticlesOfUser,
         fetchAllArticles,
         fetchArticleById,
         searchArticles,

@@ -28,6 +28,10 @@ export class ArticlesService {
     return found;
   }
 
+  async deleteArticleById(id: number) {
+    this.articleRepository.delete(id);
+  }
+
   async createArticle(
     createArticleDto: CreateArticleDto,
     user: User,

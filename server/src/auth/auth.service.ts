@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
@@ -39,5 +39,16 @@ export class AuthService {
     } catch (error) {
       throw new UnauthorizedException();
     }
+  }
+
+  async getUser(username: string):Promise<User> {
+    const found = await this.userRepository.findOne({
+      where: { username: username },
+      relations:["articles"]
+    });
+    if (!found) {
+      throw new NotFoundException(`User with username "${username}" not found`);
+    }
+    return found;
   }
 }

@@ -11,7 +11,7 @@ const ArticleContainer: React.FC<ArticleContainerProps> = ({ article }) => {
   return (
     <div className="p-2 my-5 border-b-2 border-gray-400">
       <h2
-        onClick={() => router.push(`/${article.id}`)}
+        onClick={() => router.push(`/articles/${article.id}`)}
         className="text-2xl leading-5 cursor-pointer"
       >
         {article.title}
@@ -19,7 +19,7 @@ const ArticleContainer: React.FC<ArticleContainerProps> = ({ article }) => {
       <p className="text-lg ">
         By{" "}
         <span
-          onClick={() => console.log(article.author.username)}
+          onClick={() => router.push(`/users/${article.author.username}`)}
           className="text-blue-400 cursor-pointer"
         >
           {article.author.username}
